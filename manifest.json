@@ -1,0 +1,13 @@
+{
+  "name": "FORGE — A Field Guide to Your Own Mind",
+  "short_name": "FORGE",
+  "description": "A self-mastery wiki, concept library, and daily journal for building a sharper mind.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0b0c0f",
+  "theme_color": "#0b0c0f",
+  "categories": ["education", "lifestyle", "productivity"],
+  "prefer_related_applications": false
+}

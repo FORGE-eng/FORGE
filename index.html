@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>FORGE — a field guide to your own mind</title>
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0b0c0f">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="FORGE">
+
+<!-- SEO / share -->
+<meta name="description" content="A self-mastery wiki, concept library, and daily journal for building a sharper mind.">
+<meta property="og:title" content="FORGE">
+<meta property="og:description" content="A field guide to your own mind.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Space+Mono:wght@400;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  :root{
+    --bg:#0b0c0f; --surface:#15171d; --surface2:#1c1f27;
+    --line:#262a33; --ink:#ece9e2; --mut:#8b8f99; --faint:#5b5f69;
+    --display:'Space Grotesk',system-ui,sans-serif;
+    --body:'Newsreader',Georgia,serif;
+    --mono:'Space Mono',monospace;
+  }
+  html,body{background:var(--bg);color:var(--ink);font-family:var(--body);min-height:100%;}
+  body{ -webkit-font-smoothing:antialiased; }
+  ::selection{background:var(--accent,#ff6b3d);color:#000;}
+
+  .wrap{ max-width:680px; margin:0 auto; padding:0 20px; }
+
+  /* ---------- ANIMATIONS ---------- */
+  @keyframes fadeUp{ from{opacity:0;transform:translateY(14px);} to{opacity:1;transform:translateY(0);} }
+  @keyframes fadeIn{ from{opacity:0;} to{opacity:1;} }
+  @keyframes brandDrop{ from{opacity:0;transform:translateY(-10px) scale(.92);} to{opacity:1;transform:translateY(0) scale(1);} }
+  @keyframes slideInRight{ from{opacity:0;transform:translateX(10px);} to{opacity:1;transform:translateX(0);} }
+  @keyframes entryIn{ from{opacity:0;transform:translateY(10px);} to{opacity:1;transform:translateY(0);} }
+  @keyframes chipIn{ from{opacity:0;transform:scale(.88);} to{opacity:1;transform:scale(1);} }
+  @keyframes sectionReveal{ from{opacity:0;transform:translateY(8px);} to{opacity:1;transform:translateY(0);} }
+  @keyframes iconPop{ 0%{transform:scale(0.6);opacity:0;} 60%{transform:scale(1.12);} 100%{transform:scale(1);opacity:1;} }
+  @keyframes shimmer{ 0%{background-position:200% center;} 100%{background-position:-200% center;} }
+
+  /* ---------- HEADER ---------- */
+  header{ padding:calc(34px + env(safe-area-inset-top)) 0 22px; }
+  .brand{ font-family:var(--display); font-weight:700; font-size:30px; letter-spacing:.16em; }
+  .brand .b{
+    display:inline-block;
+    animation:brandDrop .5s cubic-bezier(.34,1.56,.64,1) both;
+  }
+  .tagline{
+    font-family:var(--mono); font-size:11px; letter-spacing:.06em; color:var(--mut); margin-top:8px; text-transform:uppercase;
+    animation:fadeIn .6s .35s ease both;
+  }
+
+  /* ---------- SEARCH + FILTERS ---------- */
+  .search{ margin-top:22px; position:relative; animation:fadeUp .5s .2s ease both; }
+  .search input{
+    width:100%; background:var(--surface); border:1px solid var(--line); color:var(--ink);
+    font-family:var(--mono); font-size:13px; padding:13px 14px 13px 38px; border-radius:11px; outline:none;
+    transition:border-color .2s, box-shadow .2s;
+  }
+  .search input:focus{ border-color:#3a3f4a; box-shadow:0 0 0 3px color-mix(in srgb, var(--ink) 6%, transparent); }
+  .search svg{ position:absolute; left:13px; top:50%; transform:translateY(-50%); width:16px; height:16px; fill:var(--faint); transition:fill .2s; }
+  .search input:focus ~ svg, .search:focus-within svg{ fill:var(--mut); }
+  .search input::placeholder{ color:var(--faint); }
+
+  .filters{ display:flex; gap:8px; margin:16px 0 4px; overflow-x:auto; scrollbar-width:none; padding-bottom:2px; animation:fadeIn .5s .3s ease both;}
+  .filters::-webkit-scrollbar{display:none;}
+  .chip{
+    flex:0 0 auto; font-family:var(--mono); font-size:11px; letter-spacing:.05em; text-transform:uppercase;
+    color:var(--mut); background:transparent; border:1px solid var(--line); padding:8px 14px; border-radius:100px; cursor:pointer;
+    transition:color .18s, background .18s, border-color .18s, transform .14s;
+  }
+  .chip:active{ transform:scale(.93); }
+  .chip.on{ color:#0b0c0f; background:var(--ink); border-color:var(--ink); font-weight:700; }
+
+  /* ---------- LIST ---------- */
+  .count{ font-family:var(--mono); font-size:11px; color:var(--faint); margin:18px 0 10px; letter-spacing:.05em;}
+  .list{ display:flex; flex-direction:column; gap:11px; padding-bottom:60px; }
+  .entry{
+    position:relative; display:flex; gap:14px; align-items:center;
+    background:var(--surface); border:1px solid var(--line); border-radius:14px;
+    padding:15px 16px; cursor:pointer; overflow:hidden;
+    transition:transform .16s ease, border-color .2s, background .2s, box-shadow .2s;
+    animation:entryIn .38s ease both;
+  }
+  .entry .ebox{
+    flex:0 0 auto; width:44px; height:44px; border-radius:12px; color:var(--c);
+    display:flex; align-items:center; justify-content:center;
+    background:color-mix(in srgb, var(--c) 14%, transparent);
+    border:1px solid color-mix(in srgb, var(--c) 30%, transparent);
+    transition:transform .2s, background .2s;
+  }
+  .entry .ebox svg{ width:24px; height:24px; }
+  .entry .econt{ flex:1 1 auto; min-width:0; }
+  .entry:active{ transform:scale(.985); }
+  @media(hover:hover){
+    .entry:hover{ background:var(--surface2); border-color:var(--c); box-shadow:0 4px 20px color-mix(in srgb, var(--c) 12%, transparent); }
+    .entry:hover .ebox{ transform:scale(1.08); background:color-mix(in srgb, var(--c) 22%, transparent); }
+  }
+  .entry .top{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; }
+  .entry h2{ font-family:var(--display); font-weight:600; font-size:22px; letter-spacing:.01em; }
+  .entry .cat{ font-family:var(--mono); font-size:9.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--c); white-space:nowrap; }
+  .entry p{ color:var(--mut); font-size:16px; line-height:1.45; margin-top:6px; }
+
+  /* ---------- DETAIL ---------- */
+  .detail{
+    position:fixed; inset:0; z-index:30; background:var(--bg); overflow-y:auto; overscroll-behavior:contain;
+    transform:translateY(18px); opacity:0; pointer-events:none; transition:opacity .28s ease, transform .28s cubic-bezier(.22,1,.36,1);
+  }
+  .detail.open{ transform:translateY(0); opacity:1; pointer-events:auto; }
+  .detail .bar{
+    position:sticky; top:0; z-index:5; backdrop-filter:blur(12px); background:rgba(11,12,15,.72);
+    border-bottom:1px solid var(--line);
+    padding:calc(12px + env(safe-area-inset-top)) 20px 12px;
+  }
+  .back{ display:inline-flex; align-items:center; gap:8px; font-family:var(--mono); font-size:12px; color:var(--mut); cursor:pointer; background:none; border:none; padding:6px 0; transition:color .15s, gap .15s; }
+  .back svg{ width:16px; height:16px; fill:var(--mut); transition:fill .15s, transform .2s; }
+  .back:hover svg{ transform:translateX(-3px); }
+  .back:active{ color:var(--ink); }
+
+  .dhead{ padding:30px 0 8px; }
+  .dcat{ font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); display:inline-flex; align-items:center; gap:8px; animation:fadeIn .4s .1s both;}
+  .dcat::before{ content:''; width:18px; height:2px; background:var(--accent); display:inline-block; }
+  .dtitle{ font-family:var(--display); font-weight:700; font-size:clamp(40px,11vw,60px); line-height:.98; margin-top:14px; letter-spacing:-.01em; animation:fadeUp .5s .15s cubic-bezier(.22,1,.36,1) both; }
+  .dtitle b{ color:var(--accent); }
+  .dicon{ display:flex; align-items:center; justify-content:center; width:56px; height:56px; border-radius:15px;
+    color:var(--accent); background:color-mix(in srgb, var(--accent) 15%, transparent);
+    border:1px solid color-mix(in srgb, var(--accent) 32%, transparent); margin-bottom:22px;
+    animation:iconPop .5s cubic-bezier(.34,1.56,.64,1) both;
+  }
+  .dicon svg{ width:30px; height:30px; }
+  .epigraph{ margin-top:22px; padding-left:16px; border-left:2px solid var(--accent);
+    font-family:var(--body); font-style:italic; font-size:18px; line-height:1.45; color:var(--mut);
+    animation:fadeUp .45s .25s ease both;
+  }
+  .epigraph .by{ display:block; margin-top:9px; font-style:normal; font-family:var(--mono);
+    font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); }
+
+  .section{ padding:26px 0; border-top:1px solid var(--line); animation:sectionReveal .4s ease both; }
+  .section:first-of-type{ border-top:none; }
+  .slabel{ font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--faint); margin-bottom:12px; }
+  .stext{ font-family:var(--body); font-size:19px; line-height:1.6; color:#dad7d0; }
+  .stext strong{ color:var(--ink); font-weight:500; }
+
+  .takeaway{
+    margin:14px 0 70px; padding:26px 24px; border-radius:16px;
+    background:linear-gradient(160deg, color-mix(in srgb, var(--accent) 18%, transparent), transparent);
+    border:1px solid color-mix(in srgb, var(--accent) 35%, var(--line));
+    animation:fadeUp .45s ease both;
+  }
+  .takeaway .slabel{ color:var(--accent); }
+  .takeaway p{ font-family:var(--display); font-weight:600; font-size:24px; line-height:1.25; color:var(--ink); }
+
+  .empty{ text-align:center; color:var(--faint); font-family:var(--mono); font-size:13px; padding:50px 0; }
+
+  .brandrow{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+  .jbtn{ flex:0 0 auto; width:46px; height:46px; border-radius:12px; background:var(--surface); border:1px solid var(--line); color:var(--ink); display:flex; align-items:center; justify-content:center; cursor:pointer; transition:.18s; margin-top:2px; }
+  .jbtn svg{ width:22px; height:22px; }
+  .jbtn:active{ transform:scale(.9); }
+  @media(hover:hover){ .jbtn:hover{ border-color:#e0a458; color:#e0a458; } }
+
+  .trainbox{ margin-top:4px; padding:16px 18px; border-radius:13px;
+    background:color-mix(in srgb, var(--accent) 9%, var(--surface));
+    border:1px solid color-mix(in srgb, var(--accent) 26%, var(--line));
+    font-family:var(--body); font-size:18px; line-height:1.55; color:#e7e4dd; }
+  .slabel.tl{ color:var(--accent); }
+
+  #journal{ --accent:#e0a458; }
+  .jwrite{ margin-top:6px; }
+  .jwrite textarea{ width:100%; min-height:150px; resize:vertical; background:var(--surface);
+    border:1px solid var(--line); border-radius:14px; padding:16px; color:var(--ink);
+    font-family:var(--body); font-weight:700; font-size:19px; line-height:1.55; outline:none; transition:border-color .2s; }
+  .jwrite textarea:focus{ border-color:var(--accent); }
+  .jwrite textarea::placeholder{ color:var(--faint); font-weight:500; }
+  .jsave{ margin-top:12px; width:100%; padding:14px; border-radius:12px; cursor:pointer;
+    background:var(--accent); color:#1a1206; border:none; font-family:var(--display); font-weight:700;
+    font-size:16px; letter-spacing:.02em; transition:.15s; }
+  .jsave:active{ transform:scale(.985); }
+  .jsave.saved{ background:#3ecf8e; color:#04220f; }
+  .jcount{ font-family:var(--mono); font-size:11px; color:var(--faint); margin:26px 0 12px; letter-spacing:.05em; }
+  .jlist{ display:flex; flex-direction:column; gap:12px; padding-bottom:80px; }
+  .jentry{ position:relative; background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:16px 50px 16px 18px; }
+  .jentry .jdate{ font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); margin-bottom:10px; }
+  .jentry .jtxt{ font-family:var(--body); font-weight:700; font-size:19px; line-height:1.55; color:var(--ink); white-space:pre-wrap; word-wrap:break-word; }
+  .jdel{ position:absolute; top:12px; right:12px; width:30px; height:30px; border-radius:8px; background:transparent; border:1px solid var(--line); color:var(--mut); cursor:pointer; display:flex; align-items:center; justify-content:center; }
+  .jdel svg{ width:15px; height:15px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+  .jdel:active{ color:#ff5a5a; border-color:#ff5a5a; }
+  .jempty{ text-align:center; color:var(--faint); font-family:var(--mono); font-size:13px; padding:40px 0; }
+
+  @media (prefers-reduced-motion: reduce){ *{transition:none!important;} .detail{transition:opacity .15s!important;} }
+
+  /* ---------- CONCEPT OF THE DAY ---------- */
+  .cotd{
+    margin:18px 0 6px; border-radius:18px; overflow:hidden; cursor:pointer;
+    border:1px solid color-mix(in srgb, var(--cotd-c) 38%, var(--line));
+    background:linear-gradient(145deg, color-mix(in srgb, var(--cotd-c) 13%, var(--surface)), var(--surface));
+    transition:transform .16s ease, border-color .2s;
+  }
+  .cotd:active{ transform:scale(.985); }
+  @media(hover:hover){ .cotd:hover{ border-color:var(--cotd-c); } }
+  .cotd-inner{ padding:18px 18px 16px; }
+  .cotd-label{
+    font-family:var(--mono); font-size:10px; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--cotd-c); display:flex; align-items:center; gap:8px; margin-bottom:14px;
+  }
+  .cotd-label::before{ content:''; width:6px; height:6px; border-radius:50%; background:var(--cotd-c); display:inline-block; animation:cotdpulse 2s infinite; }
+  @keyframes cotdpulse{ 0%,100%{opacity:1;} 50%{opacity:.35;} }
+  .cotd-top{ display:flex; align-items:center; gap:14px; }
+  .cotd-icon{
+    flex:0 0 auto; width:48px; height:48px; border-radius:13px; color:var(--cotd-c);
+    display:flex; align-items:center; justify-content:center;
+    background:color-mix(in srgb, var(--cotd-c) 16%, transparent);
+    border:1px solid color-mix(in srgb, var(--cotd-c) 30%, transparent);
+  }
+  .cotd-icon svg{ width:26px; height:26px; }
+  .cotd-name{ font-family:var(--display); font-weight:700; font-size:28px; letter-spacing:-.01em; color:var(--ink); }
+  .cotd-hook{ font-family:var(--body); font-size:15.5px; line-height:1.45; color:var(--mut); margin-top:8px; }
+  .cotd-divider{ height:1px; background:color-mix(in srgb, var(--cotd-c) 22%, var(--line)); margin:14px 0; }
+  .cotd-task-label{ font-family:var(--mono); font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--cotd-c); margin-bottom:7px; }
+  .cotd-task{ font-family:var(--body); font-size:16px; line-height:1.5; color:#d9d6cf; }
+  .cotd-footer{ display:flex; align-items:center; justify-content:space-between; margin-top:14px; }
+  .cotd-done{
+    flex:0 0 auto; padding:9px 18px; border-radius:10px;
+    background:color-mix(in srgb, var(--cotd-c) 22%, transparent);
+    border:1px solid color-mix(in srgb, var(--cotd-c) 40%, transparent);
+    color:var(--cotd-c); font-family:var(--display); font-weight:700; font-size:13px; letter-spacing:.02em;
+    transition:.15s; cursor:pointer;
+  }
+  .cotd-done:active{ transform:scale(.96); }
+  .cotd-done.completed{ background:#3ecf8e22; border-color:#3ecf8e66; color:#3ecf8e; }
+  .cotd-meta{ font-family:var(--mono); font-size:10.5px; color:var(--faint); }
+  .cotd-streak{ color:var(--cotd-c); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brandrow">
+      <div>
+        <div class="brand" id="brand"></div>
+        <div class="tagline">A field guide to your own mind</div>
+      </div>
+      <button class="jbtn" id="openJournal" aria-label="Open journal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M19 17H6a2 2 0 0 0-2 2"/><path d="M9 7.5h6M9 11h6"/></svg>
+      </button>
+    </div>
+    <div class="search">
+      <svg viewBox="0 0 24 24"><path d="M21 20l-5.6-5.6a7 7 0 10-1.4 1.4L20 21zM5 10a5 5 0 1110 0 5 5 0 01-10 0z"/></svg>
+      <input id="search" type="text" placeholder="search a concept…" autocomplete="off">
+    </div>
+    <div class="filters" id="filters"></div>
+  </header>
+  <div id="cotd-wrap"></div>
+  <div class="count" id="count"></div>
+  <div class="list" id="list"></div>
+</div>
+
+<div class="detail" id="detail">
+  <div class="bar">
+    <button class="back" id="back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6v12z"/></svg>ALL CONCEPTS</button>
+  </div>
+  <div class="wrap" id="dbody"></div>
+</div>
+
+<div class="detail" id="journal">
+  <div class="bar">
+    <button class="back" id="jback"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6v12z"/></svg>BACK TO CONCEPTS</button>
+  </div>
+  <div class="wrap">
+    <div class="dhead">
+      <span class="dicon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M19 17H6a2 2 0 0 0-2 2"/></svg></span>
+      <span class="dcat">Journal</span>
+      <h1 class="dtitle">The <b>Diary</b></h1>
+    </div>
+    <div class="jwrite">
+      <textarea id="jtext" placeholder="Write what's on your mind. What did you train today?"></textarea>
+      <button class="jsave" id="jsave">Save entry</button>
+    </div>
+    <div class="jcount" id="jcount"></div>
+    <div class="jlist" id="jlist"></div>
+  </div>
+</div>
+
+<script>
+const CATS = ["All","Mind","Discipline","Energy"];
+
+const data = [
+  { id:"discipline", name:"Discipline", cat:"Discipline", c:"#5b8def",
+    hook:"Doing what you decided to do, after the feeling that decided it is gone.",
+    what:"Discipline is the bridge between who you say you are and what you actually do. It's keeping a promise to yourself when no part of you wants to. Not intensity — <strong>follow-through</strong>.",
+    truth:"It isn't willpower. Willpower is a battery that drains by noon. Discipline is a <strong>system</strong> that runs when the battery is dead — fewer decisions, fixed defaults, a smaller gap between deciding and doing.",
+    tool:"Pre-decide everything you can. Pick the time, the place, and the first move the night before, so today's tired brain just follows orders. Make the right action the lazy one: clothes laid out, phone in another room, the gym bag already in the car.",
+    trap:"Waiting to feel like it. Motivation is a guest that shows up late and leaves early. If your plan needs you to feel good, it isn't a plan.",
+    take:"Motivation gets you started. Discipline is what shows up after it leaves." },
+
+  { id:"obsession", name:"Obsession", cat:"Mind", c:"#ff4d4d",
+    hook:"Attention that refuses to let go. Most people fear it. Sharp people aim it.",
+    what:"Obsession is your focus locking onto one thing and refusing to release. It's the most concentrated form of energy a human runs on — and it's completely <strong>neutral</strong> until you choose where it points.",
+    truth:"Pointed at a craft, it builds empires. Pointed at a number, a person, or your own image, it eats you alive. The skill was never <em>avoiding</em> obsession — it's choosing its target before it chooses one for you.",
+    tool:"Give it a job. Hand your obsession one concrete object — a project, a skill, a build — and a daily outlet so the energy drains somewhere useful. Then starve the obsessions you didn't pick by deleting their triggers: the app, the feed, the person's profile.",
+    trap:"Letting it pick its own target. Left alone it defaults to validation, comparison, or someone who doesn't deserve that much rent in your head.",
+    take:"You don't fight obsession. You point it." },
+
+  { id:"consistency", name:"Consistency", cat:"Discipline", c:"#f5a623",
+    hook:"The boring multiplier. Small action times time beats genius every round.",
+    what:"Consistency is the same modest action, repeated past the point it feels exciting. It's the least glamorous input and the one that <strong>actually compounds</strong>.",
+    truth:"People wildly overrate what one heroic day does and underrate what an average day does when you stack 300 of them. The gains aren't in the big push — they're in <strong>not disappearing</strong>.",
+    tool:"Shrink the bar until you literally cannot fail — two minutes, one page, one set. Protect the streak, not the intensity. And the only real rule: never miss twice. One off day is life; two is the start of a new pattern.",
+    trap:"Going all-in for a week, burning out, and vanishing for a month. Intensity feels productive. It's also the most fragile thing you can build on.",
+    take:"Show up small. Just never disappear." },
+
+  { id:"discomfort", name:"Discomfort", cat:"Energy", c:"#ff6b3d",
+    hook:"The feeling of growth happening in real time — mislabeled as danger.",
+    what:"Discomfort is the body's alarm for <em>unfamiliar</em>, not <em>unsafe</em>. The burn in the last rep, the nerves before the hard conversation, the dull ache of doing the thing you'd rather not. It's the texture of a life that's still expanding.",
+    truth:"Your brain treats discomfort as a threat and works overtime to make it stop. But comfort is exactly where capability goes to shrink. <strong>Everything you want is one layer of discomfort away from where you're standing.</strong>",
+    tool:"Do one thing daily you'd rather skip — a cold start, the harder set, the email you've been dodging. Treat tolerance like a muscle and train it on purpose, in small reps, so the big moments don't break you.",
+    trap:"Avoiding it so smoothly you stop noticing your world quietly getting smaller around you.",
+    take:"Get comfortable being the one who's uncomfortable." },
+
+  { id:"focus", name:"Focus", cat:"Mind", c:"#2dd4bf",
+    hook:"Not concentration. The brutal art of saying no to everything else.",
+    what:"Focus isn't trying harder to pay attention. It's <strong>subtraction</strong> — removing everything that isn't the one thing, until the one thing is all that's left to do.",
+    truth:"Attention is the most expensive currency you own and the only one you can't earn back. Every yes is a silent no to something else. People don't lack focus; they lack the nerve to drop the other twelve things.",
+    tool:"One priority a day. Decide it before the day starts touching you. Kill the inputs — notifications off, tabs closed, phone in a drawer — <em>before</em> you try to add output. You can't concentrate in a room that keeps yelling at you.",
+    trap:"Mistaking busy for focused. Doing a lot of things is the most respectable way to avoid doing the thing.",
+    take:"Focus is just a long list of things you said no to." },
+
+  { id:"boredom", name:"Boredom", cat:"Mind", c:"#a78bfa",
+    hook:"The gap between stimulation and now — and where mastery actually lives.",
+    what:"Boredom is the quiet that shows up when nothing is feeding your brain a hit. The modern nervous system has almost zero tolerance for it, which is exactly why it's become a <strong>superpower</strong> to handle.",
+    truth:"Everyone can do the exciting beginning. Pros do the boring middle — the unglamorous reps long after the novelty wore off. Mastery lives on the far side of boredom, guarded by it.",
+    tool:"Train the tolerance. Sit in the dull stretch without reaching for your phone. Notice the urge to switch tasks and don't obey it. Often the boredom is the moment right before the breakthrough — it's the test, not the verdict.",
+    trap:"Reading boredom as a signal to quit or switch, when it's really a signal you've finally reached the real work.",
+    take:"The boring reps are the work. The fun was just the trailer." },
+
+  { id:"identity", name:"Identity", cat:"Mind", c:"#ec4899",
+    hook:"The story of who you are quietly deciding what you do.",
+    what:"Identity is the running answer to \"what kind of person am I?\" — and it silently approves or vetoes every action before you're even aware you chose. It's the <strong>operating system</strong> under every habit.",
+    truth:"You don't rise to your goals; you fall to your identity. \"I'm trying to run more\" loses every time to \"I'm a runner.\" Change the label and the behavior stops being a fight.",
+    tool:"Treat every small action as a vote. Decide who you're becoming in one sentence, then today do one thing <em>only that person</em> would do. You're not trying to get a result — you're collecting evidence of who you are.",
+    trap:"Chasing a new goal while clinging to an old identity. The goal pulls forward, the self-image pulls back, and the self-image always wins.",
+    take:"Don't chase the result. Become the person it belongs to." },
+
+  { id:"standards", name:"Standards", cat:"Discipline", c:"#eab308",
+    hook:"The quality you'll accept from yourself when nobody is checking.",
+    what:"Standards are your private floor — the worst you'll let yourself get away with when there's no audience, no deadline, no one to impress. They run quietly in the background of <strong>everything</strong>.",
+    truth:"You don't get what you want. You get what you <strong>tolerate</strong>. Your life slowly becomes the average of what you let slide, and almost nobody audits that average until it's already their reality.",
+    tool:"Raise the floor, not the ceiling. Define the non-negotiable minimum — the bare-bones workout, the hard bedtime, the reply you won't send sloppy — and refuse to drop below it even on bad days. Protect the floor and the ceiling takes care of itself.",
+    trap:"Fantasizing about peak performance while quietly tolerating a garbage baseline.",
+    take:"Your standards are the rent reality charges you. Raise them." },
+
+  { id:"momentum", name:"Momentum", cat:"Discipline", c:"#38bdf8",
+    hook:"The cheapest energy to use and the most expensive to restart.",
+    what:"Momentum is the state where action pulls the next action behind it — where you're already moving so the next step costs almost nothing. It's <strong>borrowed force</strong> from your past self.",
+    truth:"Starting is where you pay the toll. The second rep is cheaper than the first; the second day is cheaper than the first. Stop completely and you have to pay that brutal startup cost all over again.",
+    tool:"Never go to zero. On the worst days, do the two-minute version just to keep the engine warm. And end every session knowing your <em>exact</em> next move — leave a thread to grab so tomorrow's start is already done.",
+    trap:"Waiting to \"feel ready\" to restart, letting the gap grow until the climb back looks too steep to attempt.",
+    take:"It's far easier to stay rolling than to start rolling." },
+
+  { id:"self-talk", name:"Self-Talk", cat:"Mind", c:"#818cf8",
+    hook:"The voice narrating your life — running unsupervised this whole time.",
+    what:"Self-talk is the constant internal commentary you've stopped noticing because it never stops. It's <strong>the most-heard voice in your life</strong>, and most people let it talk trash with zero oversight.",
+    truth:"You believe what you repeat. The brain takes the most-played message as fact — whether that's \"I always quit\" or \"I figure things out.\" You're not describing yourself; you're <strong>programming</strong> yourself.",
+    tool:"Catch the line, then edit it. Swap \"I can't\" for \"I can't <em>yet</em>.\" Swap \"I'm so behind\" for \"I'm early in the process.\" Talk to yourself like someone you're responsible for — not someone you're punishing.",
+    trap:"Calling harsh self-talk \"just being realistic.\" It isn't realism. It's a bad habit wearing a serious face.",
+    take:"Watch how you talk to yourself. You're always listening." },
+
+  { id:"fear", name:"Fear", cat:"Mind", c:"#f43f5e",
+    hook:"An overprotective bodyguard flagging anything new as a threat.",
+    what:"Fear is the oldest system you run — a guard built to keep an ancient version of you alive. It can't tell the difference between a predator and a hard conversation, so it treats both like death.",
+    truth:"Because fear fires at the edge of the familiar, it's a surprisingly accurate <strong>map of where your growth is</strong>. When fear and importance point the same direction, that's almost always the rep that matters most.",
+    tool:"Use it as a compass, not a stop sign. Shrink the scary action until the fear is just barely bearable, then move while it's still there. Courage was never the absence of fear — it's action with the fear still switched on.",
+    trap:"Waiting for the fear to disappear before you start. It won't. That's not how the wiring works.",
+    take:"Fear isn't a stop sign. It's a direction." },
+
+  { id:"patience", name:"Patience", cat:"Discipline", c:"#34d399",
+    hook:"Wanting the bigger thing more than the sooner thing.",
+    what:"Patience isn't passive waiting. It's the active ability to keep working through the long stretch where effort goes in and <strong>nothing visible comes out</strong> — and to not panic about it.",
+    truth:"Almost everything worth having is back-loaded: the reward lands long after the work. Impatience is just trading a great future for an okay right now, over and over, and wondering why nothing compounds.",
+    tool:"Make the long game visible. Track the slow progress so compounding becomes something you can actually see and trust. Fall in love with the process itself, because the process is where you'll spend 99% of the time.",
+    trap:"Quitting in the dip — that flat, silent stretch right before results show up, where most people walk away.",
+    take:"Patience is just trust in your own consistency." },
+
+  { id:"energy", name:"Energy", cat:"Energy", c:"#fbbf24",
+    hook:"The real budget you spend your life from. Not time.",
+    what:"Energy is the fuel underneath every output you produce. You can have a perfectly organized calendar and an empty tank and still get <strong>nothing</strong> meaningful done. Time is the container; energy is what's actually inside it.",
+    truth:"Most people guard their schedule and bankrupt their battery — then blame discipline. But discipline runs on energy, and energy runs on things people treat as optional: sleep, movement, food, sunlight, and recovery.",
+    tool:"Protect the sources like they're part of the work, because they are. Spend your peak hours on the hardest thing, not on email and noise. And schedule rest as fuel you need — not a reward you have to earn first.",
+    trap:"Treating rest as something lazy you'll allow yourself once the work is done. The work is never done. The tank still empties.",
+    take:"Manage your energy. Time is just the container it pours into." },
+
+  { id:"ego", name:"Ego", cat:"Mind", c:"#c084fc",
+    hook:"The part of you that would rather be right than get better.",
+    what:"Ego is the protective story your mind builds around your self-image — the version of you it will defend at almost any cost, including the cost of your own growth. It's not confidence. It's the <strong>fragile</strong> thing that flinches the moment confidence gets questioned.",
+    truth:"Ego hates two things: looking stupid and being wrong. Which is a problem, because looking stupid and being wrong are the entire entry fee for learning anything. The bigger the ego, the smaller the room you'll let yourself grow in.",
+    tool:"Separate your identity from your ideas. You are not your opinion, your last result, or your worst rep — so you can drop a bad idea without losing yourself. Ask \"what if I'm wrong here?\" on purpose, <em>before</em> someone else asks it for you.",
+    trap:"Defending a position just because it's yours, long after you've quietly stopped believing it.",
+    take:"Your ego protects who you were. Growth needs who you're becoming." },
+
+  { id:"comparison", name:"Comparison", cat:"Mind", c:"#fb7185",
+    hook:"Your behind-the-scenes measured against everyone else's highlight reel.",
+    what:"Comparison is the brain's built-in ranking system, constantly checking where you stand against everyone around you. Useful in a tribe of forty. <strong>Brutal</strong> in a world where you scroll past ten thousand people's best moments before breakfast.",
+    truth:"You're comparing your full, uncut, messy life to a stranger's edited trailer. It was never a fair fight — the feed is engineered to keep you feeling exactly one notch behind, forever, because that's what keeps you scrolling.",
+    tool:"Change the opponent. Measure yourself against who you were last month, not against a curated stranger. When envy flares, treat it as data — it's quietly pointing at something you actually want, so go build that instead of resenting the person who has it.",
+    trap:"Mistaking someone's highlight for their whole life — and your whole life for a failure.",
+    take:"The only honest comparison is you-then versus you-now." },
+
+  { id:"procrastination", name:"Procrastination", cat:"Discipline", c:"#60a5fa",
+    hook:"Not laziness. It's how you flinch away from a feeling.",
+    what:"Procrastination is avoidance wearing a productivity costume. You're not dodging the task — you're dodging the <strong>emotion</strong> it brings up: boredom, confusion, the fear of doing it badly. The delay just swaps a small discomfort now for a bigger one later.",
+    truth:"It's a mood problem, not a time problem. You never procrastinate on things that feel safe and clear; you procrastinate on things that feel hard, vague, or threatening to your self-image. The task isn't the enemy. The feeling is.",
+    tool:"Shrink the first step until starting feels almost stupid — \"open the file,\" not \"write the essay.\" Make it too small for the emotion to grab. Then split deciding from doing: schedule the action ahead of time so tired-you doesn't get a vote on whether it happens.",
+    trap:"Believing you'll feel more like it later. Future-you inherits the same task, plus guilt, minus time.",
+    take:"You're not avoiding the work. You're avoiding a feeling. Start anyway." },
+
+  { id:"anxiety", name:"Anxiety", cat:"Mind", c:"#4ade80",
+    hook:"A brain running tomorrow's disaster on a loop, today.",
+    what:"Anxiety is your threat-detection system stuck in the on position, scanning for danger that's hours, days, or years away. It's the price of an imagination powerful enough to simulate the future — aimed at <strong>everything that could go wrong</strong>.",
+    truth:"Most of what it warns you about never happens, and the part that does rarely matches the version you rehearsed. Anxiety feels like preparation, but mostly it just rents out your present moment to fears that haven't earned the space.",
+    tool:"Get it out of your head and onto paper — vague dread shrinks the instant it's named. Then sort it: what can I act on, what can't I? Act on the first list. For the rest, the only move is to widen back to right now — the breath, the body, the next small real thing in front of you.",
+    trap:"Treating every anxious thought as a fact demanding a response, instead of weather passing through.",
+    take:"Anxiety is a future you aren't even living in yet. Come back to now." },
+
+  { id:"confidence", name:"Confidence", cat:"Mind", c:"#fdba74",
+    hook:"Not believing you'll win. Trusting you'll survive if you don't.",
+    what:"Confidence isn't certainty that things go well. It's the quiet trust that you can <strong>handle it either way</strong> — that failure won't end you. It's built, not born, and it's built entirely from evidence you collect.",
+    truth:"People wait to feel confident before they act. It runs the opposite direction: you act, you survive, you bank the proof, and the confidence arrives afterward. Confidence is a memory of having handled hard things — not a feeling you summon in advance.",
+    tool:"Stack small wins on purpose. Do hard things you can actually finish, keep the receipts, and let the pile of \"I did that\" grow. Keep promises to yourself — every kept promise is a deposit in the exact account you'll later draw confidence from.",
+    trap:"Waiting to feel ready. Ready is something you become on the way, never before you leave.",
+    take:"Confidence is just the residue of promises you kept to yourself." },
+
+  { id:"resilience", name:"Resilience", cat:"Discipline", c:"#22d3ee",
+    hook:"Not dodging the hit. Getting up faster than it expects.",
+    what:"Resilience is your ability to take a hit — failure, loss, rejection — and return to function without falling apart for good. It isn't a toughness that never feels pain. It's the <strong>recovery speed</strong> after you do.",
+    truth:"Life isn't decided by whether you get knocked down; everyone does. It's decided by the gap between getting knocked down and standing back up. The strong don't fall shorter. They fall shorter in <em>time</em>.",
+    tool:"Build the bounce before you need it — sleep, real people, a trained body, a reason bigger than the setback. And reframe the hit fast: \"this is happening for me to learn from,\" not \"this is happening to me.\" The story you pick decides how long you stay on the floor.",
+    trap:"Thinking the goal is to never get hurt. That's not resilience — that's just a smaller, more careful life.",
+    take:"You're not measured by the fall. You're measured by the time to stand." },
+
+  { id:"failure", name:"Failure", cat:"Mind", c:"#f87171",
+    hook:"The tuition you pay for skill. Refuse it and you just stay broke.",
+    what:"Failure is the gap between what you tried and what you wanted — and it's the single richest source of information you'll ever get for free. It's not the opposite of success. It's <strong>part of the cost</strong> of it.",
+    truth:"There's no version of getting good that skips this part. Every expert is just someone who failed at the same thing more times than you've attempted it. The only real failure is the one you refuse to pull a lesson out of.",
+    tool:"Treat each one as data, not a verdict. Ask \"what exactly broke, and what's the one change next time?\" Then lower the stakes so you can fail often and cheaply — a hundred fast, small failures teach more than one rare, expensive one.",
+    trap:"Taking it personally — turning \"that didn't work\" into \"I'm someone who doesn't work.\"",
+    take:"You don't fail. You find out. Then you adjust." },
+
+  { id:"validation", name:"Validation", cat:"Mind", c:"#e879f9",
+    hook:"Outsourcing your self-worth to people who aren't even watching.",
+    what:"Validation is approval from the outside — likes, praise, being picked. Wanting it is human. <strong>Needing</strong> it is a leak, because it hands the controls of your mood and your decisions to people who'll have forgotten you by lunch.",
+    truth:"External approval is a drug with a shrinking high. The hit fades fast, you need more next time, and chasing it slowly turns you into a performance of yourself — optimized for an audience instead of for a life you'd actually want.",
+    tool:"Build an internal scoreboard. Decide your own standard for a thing done well and check your work against that first, before the crowd weighs in. Catch yourself about to do something purely to be seen, and ask: would I still do this with no one watching?",
+    trap:"Slowly becoming whoever the audience claps for, instead of who you actually are.",
+    take:"Approval is nice. Needing it is a leash." },
+
+  { id:"gratitude", name:"Gratitude", cat:"Energy", c:"#86efac",
+    hook:"Not toxic positivity. A trained eye for what's already working.",
+    what:"Gratitude is the deliberate act of noticing what's good while it's still here. Not a mood — a <strong>skill</strong>. Your brain is built to scan for threats and missing things, so the good stuff turns invisible unless you point at it on purpose.",
+    truth:"You adapt to everything. The win you wanted, the thing you once prayed for — all of it fades into background noise within weeks. Gratitude is the manual override that flips the background back into something you can actually feel again.",
+    tool:"Name three specific things a day — not \"my health,\" but \"the coffee was good and the stairs didn't hurt.\" Specific beats grand. And run the reframe: picture losing the ordinary thing you take for granted, then look at it once more.",
+    trap:"Faking it — pasting positivity over real problems instead of noticing real good right next to them.",
+    take:"You'll miss most of this while it's still here. Look now." },
+
+  { id:"solitude", name:"Solitude", cat:"Energy", c:"#93c5fd",
+    hook:"Being alone on purpose — where you meet yourself without an audience.",
+    what:"Solitude is chosen aloneness: time with no inputs, no performance, no one to react to. It's the opposite of loneliness — one is a punishment, the other a <strong>resource</strong> most people are now too uncomfortable to sit in for five minutes.",
+    truth:"You can't hear yourself think over a constant feed of other people's thoughts. Every idea you've had that was actually yours was born in some quiet you protected. Strip out the solitude and your mind just becomes a crowd you didn't invite.",
+    tool:"Schedule real quiet — a walk with no headphones, a morning before the phone, time where boredom is allowed to surface. Let the noise drain until your own voice gets loud enough to hear. File it under maintenance, not indulgence.",
+    trap:"Plugging every silent gap with a screen, then wondering why you feel like a stranger to yourself.",
+    take:"You have to be alone sometimes to find out who's actually in there." },
+
+  { id:"habits", name:"Habits", cat:"Discipline", c:"#a3e635",
+    hook:"The autopilot running your life while you take credit for choosing.",
+    what:"A habit is a behavior your brain automated so it could stop spending energy deciding. Roughly half of what you do in a day isn't a choice — it's a <strong>loop</strong> running off a cue you stopped noticing years ago.",
+    truth:"You don't have to win the willpower fight every day if you win the design fight once. Set a habit up well and it runs itself; leave it to motivation and you'll re-fight the same battle forever and lose most rounds.",
+    tool:"Build on the loop — obvious cue, easy action, instant reward. Stack the new habit onto one you already do (\"after I brush my teeth, I…\"). Make the good thing frictionless and the bad thing annoying, then let the environment carry you instead of your effort.",
+    trap:"Trying to change behavior with raw effort while leaving every cue and the whole environment exactly as it was.",
+    take:"You don't rise to motivation. You sink to your habits — so build good ones." },
+
+  { id:"anger", name:"Anger", cat:"Energy", c:"#ff5a36",
+    hook:"Raw fuel. It'll either power you or burn the house down.",
+    what:"Anger is a surge of energy that fires when something you value gets crossed — a boundary, a standard, a sense of fairness. It isn't a bad emotion. It's a <strong>loud signal</strong> with a lot of horsepower bolted on and no steering of its own.",
+    truth:"Anger is almost always pointing at something true — a line that got crossed, a need going unmet. The feeling isn't the problem; the blind reaction is. Bury it and it leaks out sideways; obey it and it costs you. The move is to read it, then aim it.",
+    tool:"Put a gap between the spark and the action — even ten seconds of breath. Then ask what it's actually telling you: what got violated, and what would genuinely fix it? Pour the energy into the work, the boundary, the change you need — not the outburst.",
+    trap:"Letting it drive — saying and doing in ten seconds what takes ten years to undo.",
+    take:"Anger is information with a temper. Read it before you act on it." },
+
+  { id:"purpose", name:"Purpose", cat:"Mind", c:"#fcd34d",
+    hook:"The reason that makes the hard days non-negotiable.",
+    what:"Purpose is the why underneath the what — the reason big enough that the daily grind stops needing a daily justification. It's not a job title or a single goal; it's the <strong>direction</strong> everything else gets pointed in.",
+    truth:"Motivation asks \"do I feel like it?\" Purpose makes the question irrelevant. When the why is strong enough, you stop renegotiating with yourself every morning — the decision was already made at a higher level than today's mood.",
+    tool:"You don't think your way to purpose; you act and notice your way there. Track what you'd do unpaid, what problems make you angry enough to fix, who you want to help. Follow the thread and commit — the purpose sharpens through motion, not before it.",
+    trap:"Waiting for one grand, lightning-bolt calling before you'll let yourself start anything at all.",
+    take:"A strong enough why makes almost any how bearable." },
+
+  { id:"willpower", name:"Willpower", cat:"Discipline", c:"#d8b4fe",
+    hook:"A muscle, not a personality trait — and it runs out.",
+    what:"Willpower is the raw force you use to override an impulse in the moment — doing the hard thing while the easy thing is screaming. It's real and useful, but it's <strong>limited</strong>: a tank, not an endless supply.",
+    truth:"It drains as the day goes on, which is why your worst decisions cluster at night. Building your whole strategy on willpower guarantees you run out exactly when you need it most. The disciplined don't have more of it — they lean on it less.",
+    tool:"Spend it early, on what matters, then stop relying on it. Convert the willpower battles you keep refighting into habits and environment design, so the choice gets made once instead of fifty times. And protect the tank: sleep, food, and fewer trivial decisions all refill it.",
+    trap:"Treating willpower as infinite and your only tool — then calling it a character flaw when it empties.",
+    take:"Don't out-muscle temptation forever. Design it out of the room." },
+
+  { id:"pressure", name:"Pressure", cat:"Energy", c:"#fb923c",
+    hook:"What turns coal into diamond — or crushes it. Your call.",
+    what:"Pressure is the weight of stakes, expectations, and consequences pressing on a moment. It isn't inherently bad; it's <strong>intensity</strong>, and intensity is exactly what produces your sharpest work — if you don't flinch from it.",
+    truth:"You don't rise to the occasion under pressure; you fall to your level of preparation. Pressure doesn't build character — it reveals it. The calm you feel in the big moment was quietly bought in the boring reps long before.",
+    tool:"Earn calm in advance: over-prepare until the moment holds no surprises. Reframe the body's pressure signals — racing heart, narrowed focus — as readiness instead of threat; it's the same chemistry as excitement. Then shrink the moment to the one action in front of you, not the whole outcome.",
+    trap:"Dodging pressure entirely, so you never build the nerve to perform when it finally finds you.",
+    take:"Pressure reveals what you built when no one was watching." },
+
+  { id:"burnout", name:"Burnout", cat:"Energy", c:"#fca5a5",
+    hook:"Not weakness. The bill for running on empty too long.",
+    what:"Burnout is what happens when output keeps demanding energy that recovery stopped replacing. It's not one bad day or normal tiredness — it's a <strong>chronic deficit</strong>, the slow flattening of motivation, focus, and care into numbness.",
+    truth:"It rarely comes from working hard; it comes from working hard with no real recovery and no sense that it matters. You can't out-discipline a depleted system. Pushing harder into burnout is flooring the gas on an empty tank.",
+    tool:"Treat recovery as part of the work, not a reward after it. Build real off-switches — sleep, movement, breaks where the work fully stops. And audit the why: meaningless effort burns far faster than hard effort that matters. Refill before zero, not after.",
+    trap:"Wearing exhaustion like a badge and mistaking depletion for dedication.",
+    take:"You can't pour from a tank you never refill." },
+
+  { id:"curiosity", name:"Curiosity", cat:"Mind", c:"#5eead4",
+    hook:"The engine behind everything interesting you've ever done.",
+    what:"Curiosity is the pull toward what you don't yet understand — the urge to open the box, ask the next question, find out how it works. It's the <strong>opposite of fear</strong>: where fear contracts you, curiosity expands you.",
+    truth:"Boredom and burnout are often just curiosity that got starved. A curious mind learns faster and gets stuck less, because it treats problems as puzzles instead of threats. Most people don't lose curiosity because life got boring — they lost it because they stopped asking.",
+    tool:"Swap judgment for questions — \"why is this like this?\" instead of \"this is dumb.\" Chase small fascinations even when they're useless; that's where the unexpected connections hide. And when you're stuck or anxious, get curious <em>about</em> it — curiosity and dread can't fully share a room.",
+    trap:"Letting the need to look like you already know everything quietly kill the willingness to wonder.",
+    take:"Stay curious and you stay alive in the only way that counts." },
+
+  { id:"regret", name:"Regret", cat:"Mind", c:"#cbd5e1",
+    hook:"The tax on roads not taken — useful only as a map forward.",
+    what:"Regret is pain pointed backward: the ache over a choice you can't unmake, a chance you let pass, words you can't unsay. It's one of the heaviest things to carry — and the <strong>least useful</strong> if all you do is punish yourself with it.",
+    truth:"Look at what the dying say and the pattern is clear: people regret what they didn't do far more than what they did. Inaction's regrets last longer because the door never officially closed — the imagined better version keeps haunting. Your mistakes at least taught you something.",
+    tool:"Mine it, don't marinate in it. Ask what the regret reveals about your real values, then make one different choice today that honors it. You can't edit the past, but every regret is a preview of a future regret you can still prevent.",
+    trap:"Replaying the past on a loop — paying for one mistake a thousand separate times.",
+    take:"Let regret point forward, or it just becomes a place you live." },
+
+  { id:"shame", name:"Shame", cat:"Mind", c:"#94a3b8",
+    hook:"The lie that you're not flawed — you ARE the flaw.",
+    what:"Shame is the belief that something is wrong with <em>you</em>, not just with what you did. Guilt says \"I did a bad thing.\" Shame says \"I am bad.\" That one-word difference is the entire problem — guilt can move you to change; shame just makes you hide.",
+    truth:"Shame survives on secrecy and silence, and shrinks the moment it's spoken to someone safe. It poses as honesty about your flaws, but it's a distortion — it takes one action or trait and stretches it over your whole identity.",
+    tool:"Separate the act from the self: \"I did something I'm not proud of,\" not \"I'm shameful.\" Say it out loud to someone you trust — exposure is shame's antidote. Then downshift it into guilt you can act on: what's one repair or change you can actually make?",
+    trap:"Hiding the thing you're ashamed of — which is precisely the soil shame needs to grow.",
+    take:"You are not your worst moment. Drag it into the light." },
+
+  { id:"control", name:"Control", cat:"Discipline", c:"#0ea5e9",
+    hook:"Pour everything into what you can move. Drop the rest.",
+    what:"Control is the narrow band of things you can actually influence: your effort, your attention, your response, your standards. Almost everything else — outcomes, other people, the past, the weather — sits outside it no matter how hard you grip.",
+    truth:"Nearly all stress lives in the gap between what you're trying to control and what you actually can. The calmest, most effective people aren't controlling more — they've gotten ruthless about <strong>where</strong> they spend control, and stopped wrestling the rest.",
+    tool:"Sort every worry into two buckets: can act on it / can't. Pour everything into the first and practice releasing the second on purpose. Control the inputs — effort, prep, attitude — and let the outputs land where they land. You were never holding those anyway.",
+    trap:"Burning your energy trying to control results and people, then having none left for your actual effort.",
+    take:"Master the inputs. Release the rest. That's the whole game." },
+
+  { id:"acceptance", name:"Acceptance", cat:"Mind", c:"#6ee7b7",
+    hook:"Not giving up. Seeing it clearly enough to actually move.",
+    what:"Acceptance is acknowledging what's real right now without pretending, resisting, or wishing it away. It's not approval and it's not surrender — it's the <strong>clear-eyed starting line</strong> every real change has to launch from.",
+    truth:"You can't change what you won't first admit is true. Fighting reality — \"this shouldn't be happening\" — wastes the exact energy you need to handle it. Resistance is suffering stacked on top of pain; acceptance subtracts that second layer.",
+    tool:"Name the situation plainly, minus the story: \"this is what's true right now.\" Let the feeling exist without arguing with it. Then, from that grounded spot, ask the only useful question — \"given this, what's my move?\" Acceptance isn't the end of effort; it's the honest beginning of it.",
+    trap:"Confusing acceptance with defeat, so you refuse to admit reality until it forces your hand anyway.",
+    take:"Accept what is, then act on it. You can't fix a fight you're still denying." },
+
+  { id:"courage", name:"Courage", cat:"Mind", c:"#fda4af",
+    hook:"Not the absence of fear. Action while it's still switched on.",
+    what:"Courage is moving toward what matters while the fear is still firing. It was never the calm, fearless version of you — that person doesn't exist. It's the <strong>scared</strong> version choosing to act anyway.",
+    truth:"Everyone waits to feel brave before they move, but bravery is something you do, not something you feel. The fear never fully leaves; courage just refuses to let it cast the deciding vote. Small brave acts compound into a self that trusts itself.",
+    tool:"Shrink the brave thing until it's barely doable, then move before your mind talks you out of it — count down and go. Stack tiny courageous acts daily so the muscle is warm when a big moment lands. And remember: fear usually peaks right before action and drops the second you start.",
+    trap:"Waiting for confidence to show up first. It arrives after the brave act — never before it.",
+    take:"Courage isn't feeling no fear. It's moving with it riding shotgun." },
+
+  { id:"lust", name:"Lust", cat:"Mind", c:"#e11d48",
+    hook:"Wanting so badly that the wanting becomes the problem.",
+    what:"Lust is desire running hot enough to override judgment. It isn't only about people — it's the same force behind craving the result before you've done the work, wanting the shortcut, needing the high right now. It's <strong>appetite without brakes</strong>, and it costs you more than the thing was ever worth.",
+    truth:"The mind on lust narrows to a tunnel. Logic dims, patience evaporates, and everything outside the craved thing becomes invisible noise. That tunnel vision is exactly how people make the worst decisions of their lives — not from stupidity, but from <strong>want overwhelming reason</strong> in a single moment.",
+    tool:"Name what you're craving and ask whether the wanting is serving you or running you. Build a gap between desire and action — even a few hours changes the calculation completely. Channel the energy into the work that earns the thing rather than into chasing the thing itself. Appetite aimed at a craft builds something; appetite aimed at an outcome just burns.",
+    trap:"Mistaking intensity of wanting for validity of the want. Something can feel urgent and wrong at the same time.",
+    take:"Desire is fuel. Let it power the work, not the chase." },
+
+  { id:"clarity", name:"Clarity", cat:"Mind", c:"#67e8f9",
+    hook:"The moment the fog clears and you see exactly what needs to happen.",
+    what:"Clarity is the state of knowing — what you want, why it matters, and what the next move actually is. It's not a personality trait. It's a <strong>product of deliberate thinking</strong> most people skip because noise fills the space faster.",
+    truth:"Most paralysis isn't a lack of motivation. It's a lack of clarity. You can't execute a blurry plan. And a brain constantly stuffed with inputs — notifications, other people's opinions, ambient noise — can't hear its own signal well enough to decide.",
+    tool:"Get the noise out of your head and onto paper. Write the question you're stuck on at the top of a blank page and answer it with no filter. Protect regular time where no one gets access to your attention — clarity emerges in quiet, not in the middle of the feed.",
+    trap:"Mistaking busyness for progress, then wondering why everything feels murky.",
+    take:"Clarity isn't something that arrives. It's something you make room for." },
+
+  { id:"ownership", name:"Ownership", cat:"Discipline", c:"#f97316",
+    hook:"The moment you stop explaining why it happened and start deciding what happens next.",
+    what:"Ownership is radical accountability — taking full responsibility for your outcomes even when the circumstances were genuinely unfair. Not as punishment. As the only position from which you have any <strong>actual power</strong> to change things.",
+    truth:"As long as the cause lives outside you, so does the solution. The blame might be accurate and it still doesn't help you. Ownership isn't about fairness — it's about leverage. You can only pull the levers you admit you're holding.",
+    tool:"For any situation you're stuck in, ask: \"what did I do or not do that contributed to this?\" Then ask \"what's one thing I can do right now, regardless of what anyone else does?\" Move on those answers. That's where your agency actually lives.",
+    trap:"Confusing explanation with excuse. Understanding why something happened is useful. Living there is not.",
+    take:"You can be right about who caused it and still be the only one who can fix it." },
+
+  { id:"silence", name:"Silence", cat:"Energy", c:"#a5b4fc",
+    hook:"Not empty space. The loudest thing you'll ever use.",
+    what:"Silence is the deliberate absence of output — choosing not to speak, not to react, not to fill the gap. In a world that rewards noise and performance, silence is an act of <strong>unusual power</strong> that most people are too uncomfortable to hold.",
+    truth:"The urge to fill silence is almost always about your own discomfort, not about the situation. People who can sit in silence — in conversations, in negotiations, in their own mind — consistently get more from it than the ones rushing to fill it.",
+    tool:"Practice the pause. In conversations, after someone finishes talking, wait three beats before you respond. In conflict, let the heat pass before you put words on it. And in your own head, stop narrating everything — let an experience land before you're already summarizing it.",
+    trap:"Filling silence with words just to prove you exist in the moment.",
+    take:"What you don't say is often more powerful than what you do." },
+
+  { id:"vision", name:"Vision", cat:"Mind", c:"#fb923c",
+    hook:"The future you can see clearly enough to build toward.",
+    what:"Vision is a specific, vivid picture of where you're headed — not a vague wish, but a <strong>detailed mental blueprint</strong> that acts as a compass for every smaller decision. Without it, effort scatters. With it, almost everything self-organizes.",
+    truth:"People don't lack drive; they lack a destination clear enough to drive toward. A blurry goal produces blurry action. The more precisely you can picture the outcome, the more your brain starts noticing and pulling you toward the paths that lead there.",
+    tool:"Write it down in present tense, as if it's already real: where you are, what you're doing, what it feels like. Then, every day, make one small decision that the version of you in that picture would make. Vision isn't motivation fuel — it's a decision filter.",
+    trap:"Keeping the vision vague so you never have to risk it being wrong.",
+    take:"A clear picture of the destination is half the journey." },
+
+  { id:"detachment", name:"Detachment", cat:"Mind", c:"#818cf8",
+    hook:"Caring fully without letting the outcome own you.",
+    what:"Detachment is the art of giving your full effort to something while staying unhitched from the result. It's not apathy — you care deeply. But the scoreboard doesn't get to <strong>decide who you are</strong>. That part stays yours.",
+    truth:"Attachment to outcomes makes you play not to lose instead of playing to win. It tightens the grip exactly when a looser one would serve you better. The people who perform best under pressure have usually learned to pour effort in and release the result — they're genuinely free from the count.",
+    tool:"Separate your identity from the outcome before you start. Ask: \"if this goes badly, am I still okay?\" When the answer is yes, you can give it everything without the fear distorting the effort. Focus on the process you control; let the result be a report card, not a verdict.",
+    trap:"Confusing detachment with not caring — those are completely different things.",
+    take:"Pour everything in. Then let go of the outcome." },
+
+  { id:"sleep", name:"Sleep", cat:"Energy", c:"#6366f1",
+    hook:"The single highest-leverage thing you're probably undervaluing.",
+    what:"Sleep is the system that clears the brain, consolidates skill, repairs the body, and resets the emotional state. It isn't downtime. It's <strong>maintenance the whole machine runs on</strong>, and most people are running it while perpetually low.",
+    truth:"You can feel adapted to getting six hours. You are not adapted — you are just bad at detecting your own deficit. Every major system degrades: reaction time, emotional regulation, creativity, learning, metabolism. The \"I'll sleep when I'm dead\" math is more accurate than it sounds.",
+    tool:"Treat your sleep window like the most important appointment in the day — because physiologically, it is. Same time every night, even weekends. Make the room cold, dark, and quiet. The hour before is prep work: dim the lights, drop the screens. Sleep debt is real debt; you will pay it.",
+    trap:"Borrowing from sleep to buy more productive time and then wondering why the productive time is terrible.",
+    take:"Everything is harder on less sleep. Everything. Start there." },
+
+  { id:"simplicity", name:"Simplicity", cat:"Discipline", c:"#34d399",
+    hook:"Not doing less. Cutting everything that isn't the point.",
+    what:"Simplicity is the discipline of removing — ideas, commitments, systems, steps — until what's left is the cleanest path to what actually matters. It isn't minimalism for aesthetics. It's <strong>ruthless clarity</strong> about what earns its place.",
+    truth:"Complexity creeps in automatically. Plans bloat, schedules fill, systems add layers — and most of it is noise wearing the costume of productivity. The simpler the system, the more consistently it runs. The fewer the choices, the more clearly each one matters.",
+    tool:"Before adding anything — a task, a step, a tool — ask first if you can remove something instead. Take your current plan and cut it in half. Then ask if the half you kept is still the right half. The goal is ruthless enough to make any decision with one question: does this serve what I'm actually building?",
+    trap:"Equating complexity with seriousness, and simplicity with laziness.",
+    take:"If it can't be explained simply, it hasn't been understood well enough yet." },
+
+  { id:"presence", name:"Presence", cat:"Energy", c:"#4ade80",
+    hook:"Being in the room you're actually in.",
+    what:"Presence is your full attention landing on what's actually happening — not what happened, not what might happen, but <strong>right now</strong>. It's rarer than it used to be, and it's become one of the most valuable things you can give.",
+    truth:"The mind defaults to everywhere but here. It replays yesterday's embarrassment and rehearses tomorrow's conversation and misses the actual moment completely. You spend your life nominally doing things while actually somewhere else — then wonder why nothing feels real.",
+    tool:"Pick one anchor — breath, the sensation in your hands, the sound in the room — and return to it whenever you notice you've drifted. Give people your eyes, not the top of your head while you scroll. Eat without a screen. Walk without a podcast. Let what's here be enough for a moment.",
+    trap:"Treating full attention as something you owe everyone except yourself.",
+    take:"The life is in the room you're standing in. Show up for it." },
+
+  { id:"decisiveness", name:"Decisiveness", cat:"Discipline", c:"#fbbf24",
+    hook:"Making the call before perfect information shows up — because it won't.",
+    what:"Decisiveness is the ability to commit to a course of action with incomplete information and then move. Not recklessness — it's the honest acknowledgment that <strong>waiting for certainty is its own decision</strong>, and usually the worst one.",
+    truth:"Most decisions aren't as irreversible as they feel. The cost of a wrong move is usually lower than the cost of no move, because no move still costs you time, momentum, and the compounding interest on delay. Analysis paralysis is just fear wearing a spreadsheet.",
+    tool:"Set a decision deadline before you start gathering information. Decide what \"good enough\" data looks like in advance, then stop at that line. For reversible decisions, bias toward speed — you'll learn more in an hour of action than a week of deliberation. For irreversible ones, give it a night and then commit.",
+    trap:"Calling prolonged deliberation 'being thorough' when it's actually just avoiding the discomfort of being wrong.",
+    take:"A good decision now beats a perfect one too late." },
+
+  { id:"integrity", name:"Integrity", cat:"Discipline", c:"#a3e635",
+    hook:"Who you are when you think no one is watching — and when you're sure they're not.",
+    what:"Integrity is the alignment between what you say you believe and what you actually do when it's inconvenient, when no one's checking, when the easier path is right there. It's not a reputation — it's the <strong>internal record</strong> you're always building.",
+    truth:"You know when you've compromised it. The small rationalizations, the quiet shortcuts, the things you'd be uncomfortable explaining — they leave a residue. And that residue, compounded, becomes the distance between who you want to be and who you actually are.",
+    tool:"Ask one question before any decision that feels murky: \"would I be comfortable if everyone could see exactly what I'm doing and why?\" If the answer wavers, that's your answer. Then hold the standard you picked — especially on the small things no one will ever know about, because those are the ones that shape the person who shows up for the big ones.",
+    trap:"Treating integrity as something you maintain for an audience, not for yourself.",
+    take:"Integrity isn't what you do when people are watching. It's what you do when they're not." },
+];
+
+/* ---------- ICONS ---------- */
+const ICONS = {
+  discipline:`<path d="M12 3l7 3v5c0 4.2-2.9 7.4-7 9-4.1-1.6-7-4.8-7-9V6z"/>`,
+  obsession:`<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/>`,
+  consistency:`<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 9h16M8 3v4M16 3v4"/>`,
+  discomfort:`<path d="M12 2c2 4 5 5 5 9a5 5 0 0 1-10 0c0-2 1-3.5 2-5 .5 1.5 1.5 2 2.5 1.5C13 6 12.5 4 12 2z"/>`,
+  focus:`<circle cx="12" cy="12" r="6"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>`,
+  boredom:`<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l4 2"/>`,
+  identity:`<circle cx="12" cy="8" r="3.5"/><path d="M5.5 20a6.5 6.5 0 0 1 13 0"/>`,
+  standards:`<path d="M6 21V4M6 4h11l-2.5 3.5L17 11H6"/>`,
+  momentum:`<path d="M4 7l5 5-5 5M11 7l5 5-5 5"/>`,
+  "self-talk":`<path d="M21 6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3v4l5-4h6a2 2 0 0 0 2-2z"/>`,
+  fear:`<path d="M12 3l9 16H3z"/><path d="M12 9v4M12 16h.01"/>`,
+  patience:`<path d="M7 3h10M7 21h10M7 3c0 5 5 6 5 9s-5 4-5 9M17 3c0 5-5 6-5 9s5 4 5 9"/>`,
+  energy:`<path d="M13 2L4 14h6l-1 8 9-12h-6z"/>`,
+  ego:`<path d="M4 8l3 9h10l3-9-5 4-3-6-3 6z"/>`,
+  comparison:`<path d="M3 20h18M6 20V13M12 20V6M18 20V10"/>`,
+  procrastination:`<path d="M20 12a8 8 0 1 1-3.1-6.3"/><path d="M21 4v4h-4"/><path d="M12 8v4l3 2"/>`,
+  anxiety:`<path d="M3 12c1.5 0 1.5-4 3-4s1.5 6 3 6 1.5-5 3-5 1.5 4 3 4 1.5-2 3-2"/>`,
+  confidence:`<circle cx="12" cy="12" r="8.5"/><path d="M8 12l3 3 5-6"/>`,
+  resilience:`<path d="M4 15a8 8 0 0 1 16 0"/><path d="M4 15l-1-3M20 15l1-3"/><path d="M12 7V3M10 5l2-2 2 2"/>`,
+  failure:`<path d="M3 9l6 7 3-3 9 4"/><path d="M17 10l4 1-1 4"/>`,
+  validation:`<path d="M7 11v9H4a1 1 0 0 1-1-1v-7a1 1 0 0 1 1-1zM7 11l4-8a2 2 0 0 1 2 2v4h5a2 2 0 0 1 2 2.3l-1.2 6A2 2 0 0 1 17 20H7"/>`,
+  gratitude:`<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4 12H2M22 12h-2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/>`,
+  solitude:`<path d="M20 13a8 8 0 1 1-9-9 7 7 0 0 0 9 9z"/>`,
+  habits:`<path d="M17 4l3 3-3 3"/><path d="M20 7H9a5 5 0 0 0 0 10h1"/><path d="M7 20l-3-3 3-3"/><path d="M4 17h11a5 5 0 0 0 0-10h-1"/>`,
+  anger:`<path d="M12 2l2 6 6-2-4 5 4 5-6-2-2 6-2-6-6 2 4-5-4-5 6 2z"/>`,
+  purpose:`<circle cx="12" cy="12" r="9"/><path d="M16 8l-3 5-5 3 3-5z"/>`,
+  willpower:`<path d="M3 19l6-11 4 6 2-3 6 8z"/>`,
+  pressure:`<path d="M12 3v5M9 6l3-3 3 3M12 21v-5M9 18l3 3 3-3M4 12h16"/>`,
+  burnout:`<rect x="3" y="8" width="15" height="9" rx="2"/><path d="M21 11v3"/><path d="M6 12.5h2"/>`,
+  curiosity:`<circle cx="11" cy="11" r="6"/><path d="M20 20l-4.4-4.4"/>`,
+  regret:`<path d="M5 9l4-4 4 4"/><path d="M9 5v7a6 6 0 0 0 6 6h3"/>`,
+  shame:`<circle cx="12" cy="11" r="7"/><path d="M9.5 10h.01M14.5 10h.01"/><path d="M9 15c1-1 5-1 6 0"/>`,
+  control:`<path d="M4 8h16M4 16h16"/><circle cx="9" cy="8" r="2.5" fill="currentColor"/><circle cx="15" cy="16" r="2.5" fill="currentColor"/>`,
+  acceptance:`<path d="M5 19c0-8 6-14 14-14 0 8-6 14-14 14z"/><path d="M6 18C9.5 14.5 13 11 16.5 8"/>`,
+  courage:`<path d="M12 20s-7-4.5-9.3-9C1 8.3 2.6 4.8 6 4.8c2 0 3.3 1.2 4 2.4.7-1.2 2-2.4 4-2.4 3.4 0 5 3.5 3.3 6.2C19 15.5 12 20 12 20z"/>`,
+  clarity:`<circle cx="12" cy="12" r="3.5"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M16.9 16.9l2.1 2.1M4.9 19.1l2.1-2.1M16.9 7.1l2.1-2.1"/>`,
+  ownership:`<path d="M12 2l9 4.5V12c0 5.5-3.8 10-9 11C3.8 22 0 17.5 0 12V6.5z" transform="translate(3 0)"/><path d="M9 12l2 2 4-4"/>`,
+  silence:`<path d="M9 9v6M12 7v10M15 5v14M6 11v2M18 11v2"/>`,
+  vision:`<path d="M2 12s4-8 10-8 10 8 10 8-4 8-10 8-10-8-10-8z"/><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3"/>`,
+  detachment:`<circle cx="12" cy="12" r="8.5"/><path d="M12 8v4M12 16h.01"/><path d="M8.5 5.5l1.5 1.5M14 17l1.5 1.5M5.5 8.5l1.5 1.5M17 14l1.5 1.5"/>`,
+  sleep:`<path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/>`,
+  simplicity:`<path d="M5 12h14M12 5l7 7-7 7"/>`,
+  presence:`<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/><path d="M12 3v1M12 20v1M3 12H2M22 12h-1M5.6 5.6l-.7-.7M19.1 19.1l-.7-.7M5.6 18.4l-.7.7M19.1 4.9l-.7.7"/>`,
+  decisiveness:`<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/>`,
+  integrity:`<path d="M12 2l2.9 6.1L22 9.3l-5 4.8L18.2 21 12 17.6 5.8 21 7 14.1 2 9.3l7.1-1.2z"/>`,
+  lust:`<path d="M12 21s-9-5.8-9-11A5 5 0 0 1 8.5 5.5a5 5 0 0 1 3.5 1.5 5 5 0 0 1 3.5-1.5A5 5 0 0 1 21 10c0 5.2-9 11-9 11z"/><path d="M12 8v4M10 10h4"/>`
+};
+function icon(id){ return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${ICONS[id]||''}</svg>`; }
+
+/* ---------- QUOTES ---------- */
+const QUOTES = {
+  discipline:{t:"We are what we repeatedly do.", by:"Will Durant"},
+  obsession:{t:"Energy and persistence conquer all things.", by:"Benjamin Franklin"},
+  consistency:{t:"Little strokes fell great oaks.", by:"Benjamin Franklin"},
+  discomfort:{t:"A smooth sea never made a skilled sailor.", by:"Proverb"},
+  focus:{t:"Concentrate all your thoughts upon the work at hand.", by:"Alexander Graham Bell"},
+  boredom:{t:"Boredom is the doorway most people quit at.", by:"Forge"},
+  identity:{t:"Sow an act, reap a habit; sow a habit, reap a character.", by:"Proverb"},
+  standards:{t:"You don't get what you want — you get what you tolerate.", by:"Forge"},
+  momentum:{t:"A body in motion stays in motion.", by:"Newton's First Law"},
+  "self-talk":{t:"Talk to yourself like someone you're responsible for.", by:"Forge"},
+  fear:{t:"The only thing we have to fear is fear itself.", by:"Franklin D. Roosevelt"},
+  patience:{t:"Patience is bitter, but its fruit is sweet.", by:"Proverb"},
+  energy:{t:"Guard your energy like it's the work — because it is.", by:"Forge"},
+  ego:{t:"The ego would rather be right than free.", by:"Forge"},
+  comparison:{t:"Comparison is the thief of joy.", by:"Proverb"},
+  procrastination:{t:"You may delay, but time will not.", by:"Benjamin Franklin"},
+  anxiety:{t:"Worry is interest paid on trouble before it's due.", by:"Proverb"},
+  confidence:{t:"Whether you think you can or can't — you're right.", by:"Henry Ford"},
+  resilience:{t:"Fall seven times, stand up eight.", by:"Japanese proverb"},
+  failure:{t:"Failure is the condiment that gives success its flavor.", by:"Truman Capote"},
+  validation:{t:"What others think of you is none of your business.", by:"Proverb"},
+  gratitude:{t:"Gratitude turns what we have into enough.", by:"Proverb"},
+  solitude:{t:"You can't hear yourself over the noise of everyone else.", by:"Forge"},
+  habits:{t:"Habit is second nature.", by:"Proverb"},
+  anger:{t:"Speak when angry and you'll give the best speech you'll regret.", by:"Proverb"},
+  purpose:{t:"He who has a why can bear almost any how.", by:"Friedrich Nietzsche"},
+  willpower:{t:"Don't out-muscle temptation forever — design it out of the room.", by:"Forge"},
+  pressure:{t:"Pressure reveals character; it doesn't build it.", by:"Forge"},
+  burnout:{t:"You can't pour from a tank you never refill.", by:"Forge"},
+  curiosity:{t:"Stay curious and you stay alive in the only way that counts.", by:"Forge"},
+  regret:{t:"We regret the chances we didn't take far longer.", by:"Forge"},
+  shame:{t:"You are not your worst moment.", by:"Forge"},
+  control:{t:"Some things are within our power, and some are not.", by:"Epictetus"},
+  acceptance:{t:"You can't fix a fight you're still pretending isn't happening.", by:"Forge"},
+  courage:{t:"Courage is being scared to death and saddling up anyway.", by:"John Wayne"},
+  clarity:{t:"If you do not know where you are going, every road will get you nowhere.", by:"Henry Kissinger"},
+  ownership:{t:"Extreme ownership. Own everything in your world.", by:"Jocko Willink"},
+  silence:{t:"Silence is a source of great strength.", by:"Lao Tzu"},
+  vision:{t:"The very essence of leadership is that you have to have a vision.", by:"Theodore Hesburgh"},
+  detachment:{t:"Do your duty and leave the rest to heaven.", by:"Pierre Corneille"},
+  sleep:{t:"Sleep is the best meditation.", by:"Dalai Lama"},
+  simplicity:{t:"Simplicity is the ultimate sophistication.", by:"Leonardo da Vinci"},
+  presence:{t:"Wherever you are, be all there.", by:"Jim Elliot"},
+  decisiveness:{t:"In any moment of decision, the best thing you can do is the right thing. The worst is nothing.", by:"Theodore Roosevelt"},
+  integrity:{t:"Real integrity is doing the right thing knowing nobody is going to know whether you did it or not.", by:"Oprah Winfrey"},
+  lust:{t:"Between stimulus and response there is a space. In that space is our power.", by:"Viktor Frankl"}
+};
+
+/* ---------- TRAIN IT (daily drills) ---------- */
+const TRAIN = {
+  discipline:"Pick ONE keystone action and do it at the exact same time for 7 days straight — no debate, no negotiation. You're not building the habit yet; you're training the part of you that does things on schedule regardless of mood.",
+  obsession:"This week, choose one target worth your focus and physically remove one trigger of an unchosen one — delete an app, mute an account, unfollow. Then pour the freed attention into your target every single day.",
+  consistency:"Set a 'cannot-fail' minimum (2 push-ups, 1 sentence, 1 page) and hit it daily for two weeks. The only rule: never skip two days in a row. The size doesn't matter yet — the unbroken chain does.",
+  discomfort:"Do one small uncomfortable thing on purpose each day — a 30-second cold finish to your shower, the set you dread, the message you're avoiding. Rate the discomfort 1–10 before and after, and watch the number shrink over weeks.",
+  focus:"Work in 25-minute blocks on ONE task with your phone in another room. Every time you feel the urge to switch, make a tally mark instead of obeying it. Count the tallies after — they drop fast once you stop feeding them.",
+  boredom:"Sit for 5 minutes with no phone and no input — just exist. Do it daily and add a minute each week. You're deliberately raising your tolerance for the dull middle, which is exactly where most people quit.",
+  identity:"Write one identity line — 'I'm someone who ___' — and each day log a single small action that voted for it. Don't chase a feeling; stack evidence until the label is simply true.",
+  standards:"Define one non-negotiable floor (a bedtime, a clean desk, one daily rep) and hold it for 30 days, especially on bad days. Once it runs on autopilot, raise the floor one notch and repeat.",
+  momentum:"End every work session by writing your exact next first step — mid-sentence is fine. Next time, start there with zero deciding. Train yourself to never stop on a clean, cold finish.",
+  "self-talk":"For one full day, catch every 'I can't' or 'I'm so bad at this' and rewrite it out loud: add 'yet,' or say what you'd tell a friend instead. Keep a tally of the catches — awareness is 80% of the fix.",
+  fear:"Each day, do one thing that scores a 3–4 out of 10 on your fear scale — small and survivable. Log 'did it · survived.' You're teaching your nervous system, by repetition, that fear isn't the same as danger.",
+  patience:"Pick one slow goal and track a tiny daily input for 30 days without checking for results. You're training the exact muscle that lets you keep going through the flat stretch where nothing shows yet.",
+  energy:"For one week, fiercely protect a single source — a fixed sleep time, a daily walk, or no screens for the first 30 minutes awake. Notice the difference in your output. Then add a second source.",
+  ego:"Once a day, pick something you believe and say 'I might be wrong about this' — then actually go look for the evidence against it. You're training the reflex to choose being accurate over being right.",
+  comparison:"When envy flares, instead of scrolling past it, write down what you actually want underneath the feeling and one step toward it. Repeat every time it hits — you're converting a trigger into a to-do list.",
+  procrastination:"Use the 2-minute start: whenever you catch yourself avoiding something, commit to ONLY the first tiny step ('open the file'). Do this every single time the urge to delay appears, until starting stops feeling like a wall.",
+  anxiety:"Daily, dump every worry onto paper, then split them into two columns: can act on / can't control. Do one thing from the first column and consciously set the second one down. Repeat tomorrow.",
+  confidence:"Keep a 'handled it' log: each night, write 3 hard or uncomfortable things you got through that day. You're physically building the evidence file that confidence quietly draws from.",
+  resilience:"After any setback, run the same three questions on purpose: what happened, what's the lesson, what's my one next move. With reps, you shrink the gap between getting knocked down and standing back up.",
+  failure:"Once a week, deliberately attempt something you might fail at and write down the single lesson it gave you. The goal is to 'collect' cheap failures, not dodge them — frequency makes them stop stinging.",
+  validation:"Do one thing this week purely for yourself — something no one will see or applaud. You're practising checking your own scoreboard first, before you reach for the crowd's.",
+  gratitude:"Each night, name 3 specific good things from the day — not 'my health,' but 'the coffee,' 'that one text.' Specific reps train your brain to spot the good faster, automatically, over time.",
+  solitude:"Take one daily walk with no headphones and no phone — let the silence get loud. Build up to longer solo stretches until being alone with your own thoughts feels like a resource, not a punishment.",
+  habits:"Stack one tiny new habit onto something you already do — 'after I brush my teeth, I ___' — and repeat for 21 days until the existing cue automatically triggers the new action without effort.",
+  anger:"When anger spikes, run the 6-second pause: breathe, then ask 'what got crossed, and what would actually fix it?' before you respond. Practise it on small daily irritations so it's there for the big ones.",
+  purpose:"For one week, note each day what energised you and what drained you. The patterns point at your why. Then commit to one purpose-aligned action every day, even a small one.",
+  willpower:"Front-load it: do your hardest task first thing while the tank is full. Then take one recurring willpower fight and convert it into an environment change, so you stop needing willpower there at all.",
+  pressure:"Simulate it: rehearse your high-stakes thing under mild artificial pressure — a timer, a small audience, real stakes. Over-prepare on purpose so that when the real moment comes, it already feels familiar.",
+  burnout:"Schedule recovery like it's a task: one real off-block each day where work fully stops. Run a weekly energy check — in versus out — and adjust before you hit empty, not after.",
+  curiosity:"Ask 'why is this like this?' about one ordinary thing every day and chase the answer for 5 minutes. You're training wonder back into a reflex instead of letting it fade into autopilot.",
+  regret:"Take one regret that lingers and write the lesson plus one different choice you can make today. Practise pointing the backward pain forward — turning it into a future regret you get to prevent.",
+  shame:"Name one thing you've been carrying and say it to someone you trust — or at least write it as 'I did X,' not 'I am X.' Exposure shrinks shame; secrecy is the soil it grows in.",
+  control:"Each morning, list what's in your control today versus what isn't. Pour your energy only into the first column and practise consciously releasing the second. It gets easier with reps.",
+  acceptance:"When you catch yourself resisting reality — 'this shouldn't be happening' — name it plainly instead: 'this is what's true,' then ask 'what's my move?' Rep it on small annoyances first.",
+  courage:"Daily, do one thing that scares you a little: count 5-4-3-2-1 and move before your mind builds its case. Stack the small reps so the muscle is already warm when a big moment lands.",
+  clarity:"Once a day, write the single most important question you're stuck on at the top of a page and spend 5 minutes answering it with no filter. Don't research — just write what you actually think. Clarity is usually already in there, buried under noise.",
+  ownership:"Whenever something goes wrong this week, before looking outward, ask: 'what's the one thing I could have done differently?' Write it down. Not to punish yourself — to find your lever. One honest answer a day builds a radically different relationship with your outcomes.",
+  silence:"Once a day, deliberately hold silence for at least 10 extra seconds — in conversation after someone speaks, after a frustrating moment, before an important reply. Notice the discomfort and stay in it. What you don't say in those 10 seconds is often worth more than anything you would have.",
+  vision:"Write a vivid one-paragraph picture of your life in 3 years, present tense, as if it's already real. Read it every morning this week before you look at your phone. Each day, identify one decision — however small — that the person in that picture would make. Make it.",
+  detachment:"Before any project or interaction with stakes, write down: 'if this goes badly, what's the actual worst case, and am I okay?' Then commit fully. After the outcome, regardless of result, write one thing you'd do the same and one thing differently. Neither victory nor defeat gets to define you.",
+  sleep:"For one week, set a non-negotiable lights-out time and hold it — even on weekends. Make the room dark and cool before you try to sleep, and put your phone in another room. Track how you feel at 10 AM each day. By day 5, the data will be undeniable.",
+  simplicity:"Take your current to-do list and cut it in half. Then cut it in half again. What's left is the real list. For one week, finish that short list completely before adding anything new. Measure output — not by tasks completed, but by whether the important things actually moved.",
+  presence:"Pick one daily activity you usually do with a podcast or screen — a meal, a walk, a commute — and do it with nothing. Just that. Let the silence in and see what surfaces. Build the habit of letting one thing be enough for the duration of that thing.",
+  decisiveness:"For one week, give yourself a 24-hour deadline on every decision you've been sitting on. Make the call, commit to it, and move. Log each decision and how it turned out after 7 days. You'll find that most of the fear was in the deciding, not the outcome.",
+  integrity:"Each night this week, ask: 'did I act today the same way I would if everyone could see exactly what I did and why?' Write one yes and one area to tighten. You're building the habit of using your own eyes as the standard — before anyone else's.",
+  lust:"The next time a craving spikes — for a result, a reaction, an impulse buy, a shortcut — don't act immediately. Write it down and set a 24-hour wait. Check back the next day. You're training the gap between want and move, which is exactly where your judgment lives."
+};
+
+/* ---------- RENDER ---------- */
+const brand = document.getElementById('brand');
+brand.innerHTML = "FORGE".split('').map((ch,i)=>`<span class="b" style="animation-delay:${i*0.07}s">${ch}</span>`).join('');
+
+const filtersEl = document.getElementById('filters');
+const listEl = document.getElementById('list');
+const countEl = document.getElementById('count');
+const searchEl = document.getElementById('search');
+const detail = document.getElementById('detail');
+const dbody = document.getElementById('dbody');
+
+let activeCat = "All";
+let query = "";
+
+CATS.forEach(cat=>{
+  const b = document.createElement('button');
+  b.className = 'chip' + (cat==="All"?' on':'');
+  b.textContent = cat;
+  b.onclick = ()=>{ activeCat = cat; [...filtersEl.children].forEach(c=>c.classList.toggle('on', c.textContent===cat)); render(); };
+  filtersEl.appendChild(b);
+});
+
+function render(){
+  const q = query.trim().toLowerCase();
+  const items = data.filter(d=>{
+    const okCat = activeCat==="All" || d.cat===activeCat;
+    const okQ = !q || d.name.toLowerCase().includes(q) || d.hook.toLowerCase().includes(q) || d.cat.toLowerCase().includes(q);
+    return okCat && okQ;
+  });
+  countEl.textContent = `${items.length} concept${items.length!==1?'s':''}`;
+  listEl.innerHTML = '';
+  if(!items.length){ listEl.innerHTML = `<div class="empty">Nothing here. Try another word.</div>`; return; }
+  items.forEach((d,i)=>{
+    const el = document.createElement('div');
+    el.className = 'entry';
+    el.style.setProperty('--c', d.c);
+    el.style.animationDelay = `${i*0.045}s`;
+    el.innerHTML = `
+      <span class="ebox">${icon(d.id)}</span>
+      <span class="econt">
+        <span class="top"><h2>${d.name}</h2><span class="cat">${d.cat}</span></span>
+        <p>${d.hook}</p>
+      </span>`;
+    el.onclick = ()=>openDetail(d);
+    listEl.appendChild(el);
+  });
+}
+
+function openDetail(d){
+  document.documentElement.style.setProperty('--accent', d.c);
+  dbody.style.setProperty('--accent', d.c);
+  detail.style.setProperty('--accent', d.c);
+  const titleHTML = d.name.length<=9 ? `<b>${d.name}</b>` : d.name;
+  dbody.innerHTML = `
+    <div class="dhead">
+      <span class="dicon">${icon(d.id)}</span>
+      <span class="dcat">${d.cat}</span>
+      <h1 class="dtitle">${titleHTML}</h1>
+      ${QUOTES[d.id] ? `<div class="epigraph">${QUOTES[d.id].t}<span class="by">— ${QUOTES[d.id].by}</span></div>` : ''}
+    </div>
+    <div class="section" style="animation-delay:.05s"><div class="slabel">What it is</div><div class="stext">${d.what}</div></div>
+    <div class="section" style="animation-delay:.1s"><div class="slabel">The truth</div><div class="stext">${d.truth}</div></div>
+    <div class="section" style="animation-delay:.15s"><div class="slabel">Use it as a tool</div><div class="stext">${d.tool}</div></div>
+    ${TRAIN[d.id] ? `<div class="section" style="animation-delay:.2s"><div class="slabel tl">Train it — daily drill</div><div class="trainbox">${TRAIN[d.id]}</div></div>` : ''}
+    <div class="section" style="animation-delay:.22s"><div class="slabel">The trap</div><div class="stext">${d.trap}</div></div>
+    <div class="takeaway" style="animation-delay:.27s"><div class="slabel">Take this with you</div><p>${d.take}</p></div>
+  `;
+  detail.classList.add('open');
+  detail.scrollTop = 0;
+  history.pushState({detail:true}, '');
+}
+
+function closeDetail(){ detail.classList.remove('open'); }
+
+document.getElementById('back').onclick = ()=>{ history.back(); };
+window.addEventListener('popstate', ()=>{
+  if(journal.classList.contains('open')){ closeJournal(); return; }
+  if(detail.classList.contains('open')) closeDetail();
+});
+
+searchEl.addEventListener('input', e=>{ query = e.target.value; render(); });
+
+/* ---------- STORAGE (window.storage in-app · localStorage when downloaded · memory fallback) ---------- */
+const MEM = {};
+const hasWS = typeof window!=='undefined' && window.storage && typeof window.storage.get==='function';
+async function storeGet(key){
+  if(hasWS){ try{ const r = await window.storage.get(key); return r ? r.value : null; }catch(e){ return null; } }
+  try{ return localStorage.getItem(key); }catch(e){ return (key in MEM) ? MEM[key] : null; }
+}
+async function storeSet(key,val){
+  if(hasWS){ try{ await window.storage.set(key,val,false); return; }catch(e){} }
+  try{ localStorage.setItem(key,val); }catch(e){ MEM[key]=val; }
+}
+
+/* ---------- JOURNAL ---------- */
+const journal = document.getElementById('journal');
+const jtext = document.getElementById('jtext');
+const jsave = document.getElementById('jsave');
+const jlist = document.getElementById('jlist');
+const jcount = document.getElementById('jcount');
+const JKEY = 'forge_journal_v1';
+let entries = [];
+
+function fmtDate(ts){
+  const dt = new Date(ts);
+  return dt.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'}) + ' · ' +
+         dt.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});
+}
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function renderJournal(){
+  jcount.textContent = entries.length ? `${entries.length} entr${entries.length===1?'y':'ies'} · saved on this device` : '';
+  if(!entries.length){ jlist.innerHTML = `<div class="jempty">No entries yet. Write your first one above.</div>`; return; }
+  jlist.innerHTML = '';
+  entries.forEach(e=>{
+    const el = document.createElement('div');
+    el.className = 'jentry';
+    el.innerHTML = `
+      <button class="jdel" data-id="${e.id}" aria-label="Delete entry"><svg viewBox="0 0 24 24"><path d="M5 7h14M9 7V4h6v3M7 7l1 13h8l1-13"/></svg></button>
+      <div class="jdate">${fmtDate(e.id)}</div>
+      <div class="jtxt">${esc(e.text)}</div>`;
+    jlist.appendChild(el);
+  });
+}
+
+async function initJournal(){
+  const raw = await storeGet(JKEY);
+  try{ entries = raw ? JSON.parse(raw) : []; }catch(e){ entries = []; }
+  if(!Array.isArray(entries)) entries = [];
+  renderJournal();
+}
+
+jsave.addEventListener('click', async ()=>{
+  const t = jtext.value.trim();
+  if(!t) return;
+  entries.unshift({ id:Date.now(), text:t });
+  jtext.value = '';
+  renderJournal();
+  await storeSet(JKEY, JSON.stringify(entries));
+  jsave.classList.add('saved'); jsave.textContent = 'Saved ✓';
+  setTimeout(()=>{ jsave.classList.remove('saved'); jsave.textContent = 'Save entry'; }, 1200);
+});
+
+jlist.addEventListener('click', async (e)=>{
+  const del = e.target.closest('.jdel');
+  if(!del) return;
+  const id = +del.dataset.id;
+  entries = entries.filter(x=>x.id!==id);
+  renderJournal();
+  await storeSet(JKEY, JSON.stringify(entries));
+});
+
+function openJournal(){ journal.classList.add('open'); journal.scrollTop = 0; history.pushState({journal:true},''); }
+function closeJournal(){ journal.classList.remove('open'); }
+document.getElementById('openJournal').addEventListener('click', openJournal);
+document.getElementById('jback').addEventListener('click', ()=> history.back());
+
+/* ---------- CONCEPT OF THE DAY ---------- */
+const COTD_TASKS = {
+  discipline:"Write down ONE thing you've been putting off and do just the first 2 minutes of it right now. Set a timer. That's the whole task.",
+  obsession:"List every tab, app, or thought competing for your focus today. Pick one to feed. Delete or close the rest.",
+  consistency:"Set the smallest possible daily minimum for one goal — something so easy it's almost embarrassing. Do it before midnight.",
+  discomfort:"Do one thing today you'd normally avoid because it's awkward, hard, or uncertain. Note how you feel after.",
+  focus:"Work for 25 minutes on one thing only — phone face-down, tabs closed. No exceptions. Then take a 5-minute break.",
+  boredom:"Sit with nothing for 5 minutes. No phone, no podcast, no music. Just exist. See what surfaces.",
+  identity:"Write: 'I am someone who ___.' Fill in who you're becoming — not who you wish you were. Then do one thing only that person would do today.",
+  standards:"Name one thing you've been letting slide. Raise the floor on it starting today — even just slightly.",
+  momentum:"End today by writing your exact first action for tomorrow. One sentence, no ambiguity. Future you will thank you.",
+  "self-talk":"Catch yourself saying something negative about yourself today and rewrite it out loud. Once is enough.",
+  fear:"Do one thing that scores a 3 out of 10 on your personal fear scale. Log it: did it · survived.",
+  patience:"Pick one slow goal and do one small input toward it today without checking for results.",
+  energy:"Protect one energy source today — sleep time, a walk, or 30 screen-free minutes. Treat it like a meeting you can't cancel.",
+  ego:"Find one belief you hold and genuinely look for evidence against it. Not to change your mind — just to test it.",
+  comparison:"The next time envy fires today, write what you actually want underneath that feeling. Then take one step toward it.",
+  procrastination:"Pick the task you've been avoiding most. Open it right now — just open it. Starting is the whole task.",
+  anxiety:"Dump every worry onto paper, then split them: can act on / can't control. Do one thing from column one.",
+  confidence:"Write 3 hard things you got through recently — big or small. Read the list twice. That's your evidence file.",
+  resilience:"Think of a recent setback. Write: what happened, what's one lesson, what's my next move. Then take the move.",
+  failure:"Attempt something you might fail at today — something low-stakes. Write the one thing it taught you.",
+  validation:"Do one thing today purely for yourself — something no one will see, applaud, or know about.",
+  gratitude:"Name 3 specific things from the last 24 hours. Not 'my health' — 'the light this morning,' 'that one message.'",
+  solitude:"Take a 10-minute walk with no headphones today. Let it be quiet.",
+  habits:"Stack one tiny new action onto something you already do today. 'After I ___, I will ___.' Do it once.",
+  anger:"The next time something irritates you today, pause 6 seconds and ask: what actually got crossed here? What would fix it?",
+  purpose:"Write what you'd do with your time if money didn't matter. Circle the part that already overlaps with today.",
+  willpower:"Do your hardest task first thing this morning before you open anything else. Spend none of your tank on trivial decisions until it's done.",
+  pressure:"Pick something you need to perform soon and rehearse it once under mild artificial pressure — a timer, an imagined audience.",
+  burnout:"Schedule one genuine off-block today where work fully stops. No checking. No 'just quickly.' Fully off.",
+  curiosity:"Ask 'why is this like this?' about one ordinary thing and chase the answer for 5 minutes.",
+  regret:"Name one lingering regret. Write the lesson it holds and one different choice you can make today. Point it forward.",
+  shame:"Name one thing you've been carrying silently. Write it as 'I did X' — not 'I am X.' Exposure is the antidote.",
+  control:"List what's in your control today and what isn't. Spend your energy only on the first column.",
+  acceptance:"Name something you're resisting right now. Say it plainly: 'this is what's true.' Then ask: given this, what's my move?",
+  courage:"Do one thing today that scores a nervous 3 out of 10. Count 5-4-3-2-1 and go before your mind makes its case.",
+  clarity:"Write the single question you're most stuck on at the top of a blank page. Spend 5 minutes answering it with no filter — no research, just what you actually think.",
+  ownership:"Think of one situation where you've been blaming something external. Ask: what's one thing I could have done differently? Then ask: what can I do right now, regardless of anyone else?",
+  silence:"In your next conversation, wait 3 full beats after the other person finishes before you speak. Notice what that space gives you.",
+  vision:"Write a single paragraph — present tense — of your life in 3 years as if it's already real. Then make one decision today that person would make.",
+  detachment:"Before you start your most important task today, write: 'if this goes badly, I'll still be okay because ___.' Then go all in.",
+  sleep:"Commit to a specific lights-out time tonight and hold it. Make the room dark, phone in another room. One night of real sleep as an experiment.",
+  simplicity:"Take your to-do list and cut it in half. Then ask if what's left is actually the right half. Do those things completely before adding anything back.",
+  presence:"Pick one activity you'd normally do with a screen or podcast and do it with nothing today. Let what's there be enough.",
+  decisiveness:"Pick one decision you've been sitting on. Give yourself until tonight to make it. Write it down, commit to it, move.",
+  integrity:"Before you do anything murky today, ask: 'would I be comfortable if everyone could see exactly what I'm doing and why?' Let the answer guide you.",
+  lust:"Identify one thing you're craving right now — a result, a reaction, a purchase, an outcome. Write it down, then ask: is the wanting helping me or running me? Don't act on it for 24 hours. See what the gap reveals."
+};
+
+const COTD_KEY = 'forge_cotd_v1';
+
+function getDayKey(){
+  const d = new Date();
+  return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+}
+
+function seededIndex(dateKey, len){
+  // simple hash so same day always picks same concept
+  let h = 0;
+  for(let i=0; i<dateKey.length; i++) h = (Math.imul(31, h) + dateKey.charCodeAt(i)) | 0;
+  return Math.abs(h) % len;
+}
+
+async function initCOTD(){
+  const wrap = document.getElementById('cotd-wrap');
+  const dayKey = getDayKey();
+  const idx = seededIndex(dayKey, data.length);
+  const d = data[idx];
+
+  // load stored state
+  let state = { completed: false, streak: 0, lastDone: null };
+  try{
+    const raw = await storeGet(COTD_KEY);
+    if(raw) state = JSON.parse(raw);
+  }catch(e){}
+
+  // check if completed today
+  const doneToday = state.lastDone === dayKey;
+  // update streak: if yesterday was done, streak continues; else reset on new day
+  if(!doneToday && state.lastDone){
+    const yesterday = new Date(); yesterday.setDate(yesterday.getDate()-1);
+    const yk = `${yesterday.getFullYear()}-${yesterday.getMonth()}-${yesterday.getDate()}`;
+    if(state.lastDone !== yk) state.streak = 0; // missed a day
+  }
+
+  const task = COTD_TASKS[d.id] || d.tool;
+  const streakTxt = state.streak > 0 ? `<span class="cotd-streak">🔥 ${state.streak}-day streak</span>` : '';
+
+  wrap.innerHTML = `
+    <div class="cotd" id="cotd-card" style="--cotd-c:${d.c}">
+      <div class="cotd-inner">
+        <div class="cotd-label">Concept of the day</div>
+        <div class="cotd-top">
+          <span class="cotd-icon">${icon(d.id)}</span>
+          <div>
+            <div class="cotd-name">${d.name}</div>
+          </div>
+        </div>
+        <div class="cotd-hook">${d.hook}</div>
+        <div class="cotd-divider"></div>
+        <div class="cotd-task-label">Today's task</div>
+        <div class="cotd-task">${task}</div>
+        <div class="cotd-footer">
+          <button class="cotd-done${doneToday?' completed':''}" id="cotd-btn">
+            ${doneToday ? '✓ Done today' : 'Mark done'}
+          </button>
+          <span class="cotd-meta">${streakTxt}</span>
+        </div>
+      </div>
+    </div>`;
+
+  // click card body → open detail
+  document.getElementById('cotd-card').addEventListener('click', (e)=>{
+    if(e.target.closest('#cotd-btn')) return;
+    openDetail(d);
+  });
+
+  // mark done
+  document.getElementById('cotd-btn').addEventListener('click', async (e)=>{
+    e.stopPropagation();
+    if(doneToday) return;
+    const yesterday = new Date(); yesterday.setDate(yesterday.getDate()-1);
+    const yk = `${yesterday.getFullYear()}-${yesterday.getMonth()}-${yesterday.getDate()}`;
+    const newStreak = (state.lastDone === yk || state.streak === 0) ? (state.streak + 1) : 1;
+    state = { completed: true, streak: newStreak, lastDone: dayKey };
+    await storeSet(COTD_KEY, JSON.stringify(state));
+    // re-render
+    initCOTD();
+  });
+}
+
+render();
+initJournal();
+initCOTD();
+
+/* ── Service Worker ── */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
+}
+
+/* ── Install prompt (Android "Add to Home Screen") ── */
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  // Show a subtle install banner after 8 seconds if not already installed
+  setTimeout(() => {
+    if (!deferredPrompt) return;
+    if (window.matchMedia('(display-mode: standalone)').matches) return;
+    showInstallBanner();
+  }, 8000);
+});
+
+function showInstallBanner() {
+  const banner = document.createElement('div');
+  banner.id = 'install-banner';
+  banner.innerHTML = `
+    <div style="
+      position:fixed; bottom:20px; left:50%; transform:translateX(-50%);
+      background:#15171d; border:1px solid #ff6b3d44; border-radius:16px;
+      padding:14px 20px; display:flex; align-items:center; gap:14px;
+      font-family:'Space Grotesk',sans-serif; z-index:999; max-width:340px; width:calc(100% - 40px);
+      box-shadow:0 8px 32px #00000066; animation:fadeUp .4s ease both;
+    ">
+      <div style="width:40px;height:40px;border-radius:10px;background:#ff6b3d22;border:1px solid #ff6b3d44;display:flex;align-items:center;justify-content:center;font-size:20px;">⚒️</div>
+      <div style="flex:1">
+        <div style="font-weight:700;font-size:14px;color:#ece9e2;">Install FORGE</div>
+        <div style="font-size:12px;color:#8b8f99;margin-top:2px;">Add to home screen</div>
+      </div>
+      <button id="install-yes" style="
+        background:#ff6b3d; color:#1a0a00; border:none; border-radius:10px;
+        padding:9px 16px; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:13px; cursor:pointer;
+      ">Install</button>
+      <button id="install-no" style="
+        background:transparent; color:#5b5f69; border:none; font-size:20px; cursor:pointer; padding:0 4px; line-height:1;
+      ">×</button>
+    </div>`;
+  document.body.appendChild(banner);
+
+  document.getElementById('install-yes').onclick = async () => {
+    banner.remove();
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+    deferredPrompt = null;
+  };
+  document.getElementById('install-no').onclick = () => banner.remove();
+}
+</script>
+</body>
+</html>
